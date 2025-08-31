@@ -1,5 +1,9 @@
 # DevTeam – AI-Powered Developer Team 👨‍💻🤖
 
+<p align="center">
+  <img src="assets/DevTeam.jpeg" alt="DevTeam Logo" width="400"/>
+</p>
+
 An **AI-powered developer assistant** built with [OpenAI Agents](https://github.com/openai/agents), [Chainlit](https://docs.chainlit.io/), and [Gemini API](https://ai.google.dev/).
 It acts as a **multi-agent system** with specialized experts for **Frontend, Backend, AI, and Full Stack Development**, managed by a central **Manager Agent**.
 
@@ -151,9 +155,3 @@ Just ask a question, and the **Manager Agent** will route it to the correct expe
 ## 🤝 Contributing
 
 PRs are welcome! For major changes, open an issue first to discuss what you’d like to change.
-
----
-
-## 📜 License
-
-MIT License.
