@@ -15,6 +15,8 @@ input_guardrails_agent = Agent(
     - Backend Development
     - Artificial Intelligence
     - Full Stack Development
+
+    CRITICAL: You MUST respond ONLY with a valid JSON object with keys "is_domain_related" (boolean) and "reasoning" (string).
     """,
     model=model,
     output_type=OutputDomain

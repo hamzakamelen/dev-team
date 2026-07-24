@@ -6,15 +6,15 @@ from agents import OpenAIChatCompletionsModel, RunConfig, set_tracing_disabled
 load_dotenv()
 set_tracing_disabled(disabled=True)
 
-gemini_api = os.getenv("GEMINI_API_KEY")
+groq_api_key = os.getenv("GROQ_API_KEY") or os.getenv("GEMINI_API_KEY")
 
 external_client = AsyncOpenAI(
-    api_key=gemini_api,
-    base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+    api_key=groq_api_key,
+    base_url=os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
 )
 
 model = OpenAIChatCompletionsModel(
-    model="gemini-2.0-flash",
+    model="openai/gpt-oss-120b",
     openai_client=external_client
 )
 
