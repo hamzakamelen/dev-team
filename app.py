@@ -41,24 +41,37 @@ async def handle_message(message: cl.Message):
             ]
             cl.user_session.set("history", history)
 
-        result = Runner.run_streamed(
-            manager,
-            input=serialize_history(history),
-            run_config=config
-        )
+        last_error = None
+        for attempt in range(3):
+            try:
+                result = Runner.run_streamed(
+                    manager,
+                    input=serialize_history(history),
+                    run_config=config
+                )
 
-        async for event in result.stream_events():
-            if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
-                await msg.stream_token(event.data.delta)
+                async for event in result.stream_events():
+                    if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
+                        await msg.stream_token(event.data.delta)
 
-        final_text = result.final_output
-        final_text_cleaned = clean_output(final_text)
+                final_text = result.final_output
+                final_text_cleaned = clean_output(final_text)
 
-        msg.content = final_text_cleaned
-        await msg.update()
+                msg.content = final_text_cleaned
+                await msg.update()
 
-        history.append({"role": "assistant", "content": final_text_cleaned})
-        cl.user_session.set("history", history)
+                history.append({"role": "assistant", "content": final_text_cleaned})
+                cl.user_session.set("history", history)
+                break
+            except (InputGuardrailTripwireTriggered, OutputGuardrailTripwireTriggered):
+                raise
+            except Exception as e:
+                last_error = e
+                if attempt < 2:
+                    msg.content = ""
+                    await msg.update()
+                    continue
+                raise last_error
 
     except InputGuardrailTripwireTriggered as e:
         await cl.Message(content=f"❌ Sorry, I cannot handle that request.\nReason: {getattr(e, 'output_info', {}).reasoning}").send()

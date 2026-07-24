@@ -13,8 +13,10 @@ external_client = AsyncOpenAI(
     base_url=os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
 )
 
+# openai/gpt-oss-20b reliably supports both function calling (handoffs)
+# and json_schema structured outputs (guardrails) on Groq's streaming API.
 model = OpenAIChatCompletionsModel(
-    model="openai/gpt-oss-120b",
+    model="openai/gpt-oss-20b",
     openai_client=external_client
 )
 
